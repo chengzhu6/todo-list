@@ -18,4 +18,7 @@ public interface DBUserDataSource extends UserDataSource {
 
     @Insert(onConflict = REPLACE)
     Completable save(User user);
+
+   @Query("SELECT * FROM user limit 1")
+    Maybe<User> findUser();
 }

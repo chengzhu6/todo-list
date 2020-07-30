@@ -9,4 +9,6 @@ import io.reactivex.Maybe;
 public interface UserDataSource {
     Maybe<User> findByName(String userId);
     Completable save(User user);
+
+    Maybe<User> findUser();
 }
