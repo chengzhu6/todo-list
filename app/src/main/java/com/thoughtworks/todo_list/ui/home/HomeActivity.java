@@ -1,11 +1,11 @@
 package com.thoughtworks.todo_list.ui.home;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -40,6 +40,14 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -55,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void init() {
-        setSupportActionBar(toolbar);
+        initToolbar();
         currentDay.setText(String.format("%s,%s", LocalDateTime.now().getDayOfWeek(),
                 LocalDateTime.now().getDayOfMonth()));
         currentMonth.setText(LocalDateTime.now().getMonth().toString());
