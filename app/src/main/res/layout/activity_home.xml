@@ -25,32 +25,41 @@
             android:id="@+id/current_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/basic_font_size_20"
+            android:textColor="@color/basic_color"
+            android:layout_marginTop="@dimen/home_current_day_margin_top"
+            android:layout_marginStart="@dimen/basic_margin_left_right"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/my_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+            tools:text="Thursday, 23th"/>
 
         <TextView
             android:id="@+id/current_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="@dimen/basic_font_size_15"
+            android:layout_marginTop="@dimen/home_current_month_margin_top"
+            android:layout_marginStart="@dimen/basic_margin_left_right"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_day" />
+            app:layout_constraintTop_toBottomOf="@+id/current_day"
+            tools:text="July"/>
 
         <TextView
             android:id="@+id/total_number_of_tasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="@dimen/basic_font_size_15"
+            android:layout_marginEnd="@dimen/basic_margin_left_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@+id/current_month" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/current_month"
+            tools:text="10个任务"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/task_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/task_list_background_color"
+            android:layout_marginTop="@dimen/home_task_list_margin_top"
             app:layout_constraintTop_toBottomOf="@+id/total_number_of_tasks"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

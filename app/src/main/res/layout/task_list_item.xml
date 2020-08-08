@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_list_item"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/task_list_item_height"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <CheckBox
         android:id="@+id/finished_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/colorAccent"
+        android:buttonTint="@color/basic_color"
+        android:layout_marginStart="@dimen/basic_margin_left_right"
         app:layout_constraintBaseline_toBaselineOf="@+id/task_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,16 +24,27 @@
         app:layout_constraintStart_toEndOf="@+id/finished_task"
         app:layout_constraintEnd_toStartOf="@id/task_deadline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="做一顿丰盛的早餐"/>
 
     <TextView
         android:id="@+id/task_deadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/list_item_text_size"
+        android:layout_marginEnd="@dimen/basic_margin_left_right"
         app:layout_constraintBaseline_toBaselineOf="@id/task_title"
         app:layout_constraintStart_toEndOf="@+id/task_title"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="7月23日"/>
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height"
+        android:background="@color/divide_line_color"
+        android:layout_marginTop="@dimen/task_list_item_divide_line_margin_top"
+        app:layout_constraintTop_toBottomOf="@id/task_title" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

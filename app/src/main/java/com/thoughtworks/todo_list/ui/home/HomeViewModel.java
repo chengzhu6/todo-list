@@ -1,7 +1,5 @@
 package com.thoughtworks.todo_list.ui.home;
 
-import android.database.Observable;
-
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
