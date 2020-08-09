@@ -8,7 +8,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,6 +27,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private Button confirmButton;
     private EditText descriptionEditText;
     private Switch isRemindSwitch;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,19 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void init() {
+        setSupportActionBar(toolbar);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        }
         confirmButton.setEnabled(false);
         createTaskViewModel.observerTask(this, task -> {
             confirmButton.setEnabled(StringUtils.isNotBlank(task.getDeadLine()) && StringUtils.isNotBlank(task.getTitle()));
             if (task.getDeadLine() != null) {
                 deadLineTextView.setText(task.getDeadLine());
-                deadLineTextView.setTextColor(getColor(R.color.colorAccent));
+                deadLineTextView.setTextColor(getColor(R.color.basic_color));
             }
         });
 
@@ -65,6 +75,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.title_edit_text);
         descriptionEditText = findViewById(R.id.description_edit_text);
         isRemindSwitch = findViewById(R.id.is_remind);
+        toolbar = findViewById(R.id.create_task_tool_bar);
     }
 
     private void obtainViewModel() {

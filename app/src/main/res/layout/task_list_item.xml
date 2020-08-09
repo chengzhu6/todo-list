@@ -21,6 +21,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/list_item_text_size"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@+id/finished_task"
         app:layout_constraintEnd_toStartOf="@id/task_deadline"
         app:layout_constraintTop_toTopOf="parent"

@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/tool_bar_background_color"
+        android:background="@color/basic_background_color"
         android:layout_height="match_parent" >
 
         <androidx.appcompat.widget.Toolbar

@@ -8,4 +8,6 @@
     <color name="task_list_background_color">#ffffff</color>
     <color name="basic_color">#1296db</color>
     <color name="divide_line_color">#D3D1D1</color>
+    <color name="basic_background_color">#FFFCF1F1</color>
+    <color name="white">#ffffff</color>
 </resources>

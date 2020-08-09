@@ -34,6 +34,7 @@ public class CalendarViewFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         calendarView = getView().findViewById(R.id.calendar_view);
+        calendarView.setMinDate(System.currentTimeMillis() - 1000);
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
             createTaskViewModel.setDate(String.format("%s年%s月%s日", i, i1, i2));
             getActivity().getSupportFragmentManager().popBackStack();
