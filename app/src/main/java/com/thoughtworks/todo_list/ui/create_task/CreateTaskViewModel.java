@@ -1,5 +1,6 @@
 package com.thoughtworks.todo_list.ui.create_task;
 
+import android.app.NotificationManager;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -90,7 +91,10 @@ public class CreateTaskViewModel extends ViewModel {
                     Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
                     taskCreateResult.postValue(TaskCreateResult.CREATE_FAILED);
                 })
-                .subscribe(aLong -> taskCreateResult.postValue(TaskCreateResult.CREATE_SUCCESS));
+                .subscribe(aLong -> {
+                    // todo create notification
+                    taskCreateResult.postValue(TaskCreateResult.CREATE_SUCCESS);
+                });
         compositeDisposable.add(disposable);
     }
 
