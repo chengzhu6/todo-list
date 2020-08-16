@@ -22,6 +22,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder>{
 
     private TaskListViewHolder.FinishedTaskCheckBoxListener finishedTaskCheckBoxListener;
 
+    public void setTasksItemClickListener(TasksItemClickListener tasksItemClickListener) {
+        this.tasksItemClickListener = tasksItemClickListener;
+    }
+
+    private TasksItemClickListener tasksItemClickListener;
+
     public TaskListAdapter(List<Task> tasks) {
         this.tasks = tasks;
     }
@@ -39,11 +45,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder>{
         if (task != null) {
             holder.setData(task);
             holder.setCheckBoxChangeListener(finishedTaskCheckBoxListener);
+            holder.itemView.setOnClickListener(view -> tasksItemClickListener.onClickTasksItem(task));
         }
     }
 
     @Override
     public int getItemCount() {
         return tasks.size();
+    }
+
+    public interface TasksItemClickListener{
+        void onClickTasksItem(Task task);
     }
 }

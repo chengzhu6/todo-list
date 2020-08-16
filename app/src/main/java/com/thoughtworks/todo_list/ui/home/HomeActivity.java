@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,17 +73,19 @@ public class HomeActivity extends AppCompatActivity {
         homeViewModel.observerTasks(this, tasks -> {
             totalNumberOfTasks.setText(String.format(format, tasks.size()));
             TaskListAdapter adapter = new TaskListAdapter(tasks);
-            adapter.setFinishedTaskCheckBoxListener(new TaskListViewHolder.FinishedTaskCheckBoxListener() {
-                @Override
-                public void onChange(Task task, boolean isDone) {
-                    homeViewModel.updateTaskState(task, isDone);
-                }
-            });
+            adapter.setFinishedTaskCheckBoxListener((task, isDone) -> homeViewModel.updateTaskState(task, isDone));
+            adapter.setTasksItemClickListener(this::goToTaskEditorActivity);
             taskList.setAdapter(adapter);
             taskList.setLayoutManager(new LinearLayoutManager(this));
             taskList.setHasFixedSize(true);
         });
         homeViewModel.getAllTask();
+    }
+
+    private void goToTaskEditorActivity(Task task) {
+        Intent intent = new Intent(this, CreateTaskActivity.class);
+        intent.putExtra("oldTask", task);
+        startActivity(intent);
     }
 
     private void obtainViewModel() {

@@ -1,6 +1,5 @@
 package com.thoughtworks.todo_list.ui.create_task;
 
-import android.app.NotificationManager;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -14,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class CreateTaskViewModel extends ViewModel {
@@ -21,26 +21,26 @@ public class CreateTaskViewModel extends ViewModel {
 
     private MutableLiveData<Task> task;
     private TaskRepository taskRepository;
-    private MutableLiveData<TaskCreateResult> taskCreateResult;
+    private MutableLiveData<TaskSaveResult> taskSaveResult;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    private MutableLiveData<TaskCreateResult> getTaskCreateResult() {
-        if (taskCreateResult == null) {
-            taskCreateResult = new MutableLiveData<>();
+    private MutableLiveData<TaskSaveResult> getTaskSaveResult() {
+        if (taskSaveResult == null) {
+            taskSaveResult = new MutableLiveData<>();
         }
-        return taskCreateResult;
+        return taskSaveResult;
     }
 
     public void observerTask(LifecycleOwner lifecycleOwner, Observer<Task> observer) {
         getTask().observe(lifecycleOwner, observer);
     }
 
-    public void observerTaskCreateResult(LifecycleOwner lifecycleOwner, Observer<TaskCreateResult> observer) {
-        getTaskCreateResult().observe(lifecycleOwner, observer);
+    public void observerTaskCreateResult(LifecycleOwner lifecycleOwner, Observer<TaskSaveResult> observer) {
+        getTaskSaveResult().observe(lifecycleOwner, observer);
     }
 
     private MutableLiveData<Task> getTask() {
@@ -74,6 +74,10 @@ public class CreateTaskViewModel extends ViewModel {
         task.postValue(value);
     }
 
+    public void setTask(Task oldTask) {
+        task.postValue(oldTask);
+    }
+
     @NotNull
     private Task task() {
         Task value = task.getValue();
@@ -89,13 +93,26 @@ public class CreateTaskViewModel extends ViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnError(throwable -> {
                     Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
-                    taskCreateResult.postValue(TaskCreateResult.CREATE_FAILED);
+                    taskSaveResult.postValue(TaskSaveResult.SAVE_FAILED);
                 })
                 .subscribe(aLong -> {
                     // todo create notification
-                    taskCreateResult.postValue(TaskCreateResult.CREATE_SUCCESS);
+                    taskSaveResult.postValue(TaskSaveResult.SAVE_SUCCESS);
                 });
         compositeDisposable.add(disposable);
     }
 
+    public void updateTask() {
+
+        Disposable disposable = taskRepository.updateTask(task.getValue())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnError(throwable -> {
+                    Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
+                    taskSaveResult.postValue(TaskSaveResult.SAVE_FAILED);
+                })
+                .doOnComplete(() -> taskSaveResult.postValue(TaskSaveResult.SAVE_SUCCESS))
+                .subscribe();
+        compositeDisposable.add(disposable);
+    }
 }

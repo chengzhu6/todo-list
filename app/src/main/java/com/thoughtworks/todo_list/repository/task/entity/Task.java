@@ -4,11 +4,12 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
-public class Task {
+public class Task implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;

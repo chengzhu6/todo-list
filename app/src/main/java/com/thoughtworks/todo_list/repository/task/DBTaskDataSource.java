@@ -9,6 +9,7 @@ import com.thoughtworks.todo_list.repository.task.entity.Task;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -22,4 +23,7 @@ public interface DBTaskDataSource extends TaskDataSource {
 
     @Update
     void updateTaskState(Task task);
+
+    @Update
+    Completable updateTask(Task task);
 }

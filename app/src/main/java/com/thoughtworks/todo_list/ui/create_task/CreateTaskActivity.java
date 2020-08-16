@@ -2,6 +2,7 @@ package com.thoughtworks.todo_list.ui.create_task;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.thoughtworks.todo_list.MainApplication;
 import com.thoughtworks.todo_list.R;
+import com.thoughtworks.todo_list.repository.task.entity.Task;
 import com.thoughtworks.todo_list.ui.home.HomeActivity;
 import com.thoughtworks.todo_list.util.StringUtils;
 
@@ -39,14 +41,17 @@ public class CreateTaskActivity extends AppCompatActivity {
         init();
     }
 
+    private void loadView() {
+        deadLineTextView = findViewById(R.id.set_date);
+        confirmButton = findViewById(R.id.confirm_button);
+        titleEditText = findViewById(R.id.title_edit_text);
+        descriptionEditText = findViewById(R.id.description_edit_text);
+        isRemindSwitch = findViewById(R.id.is_remind);
+        toolbar = findViewById(R.id.create_task_tool_bar);
+    }
+
     private void init() {
-        setSupportActionBar(toolbar);
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setDisplayShowTitleEnabled(false);
-            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_back);
-        }
+        initActionBar();
         confirmButton.setEnabled(false);
         createTaskViewModel.observerTask(this, task -> {
             confirmButton.setEnabled(StringUtils.isNotBlank(task.getDeadLine()) && StringUtils.isNotBlank(task.getTitle()));
@@ -56,10 +61,40 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
-        createTaskViewModel.observerTaskCreateResult(this, taskCreateResult -> {
-            Toast.makeText(this, taskCreateResult.name(), Toast.LENGTH_SHORT).show();
-            if (taskCreateResult.equals(TaskCreateResult.CREATE_SUCCESS)) {
+        createTaskViewModel.observerTaskCreateResult(this, taskSaveResult -> {
+            Toast.makeText(this, taskSaveResult.name(), Toast.LENGTH_SHORT).show();
+            if (taskSaveResult.equals(TaskSaveResult.SAVE_SUCCESS)) {
                 backToHome();
+            }
+        });
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Task oldTask = (Task) extras.get("oldTask");
+            if (oldTask != null) {
+                showEditPage(oldTask);
+            }
+        }
+    }
+
+    private void initActionBar() {
+        setSupportActionBar(toolbar);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        }
+    }
+
+    private void showEditPage(Task oldTask) {
+        createTaskViewModel.setTask(oldTask);
+        titleEditText.getText().append(oldTask.getTitle());
+        descriptionEditText.getText().append(oldTask.getDescription());
+        isRemindSwitch.setChecked(oldTask.isRemind());
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createTaskViewModel.updateTask();
             }
         });
     }
@@ -67,15 +102,6 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void backToHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-    }
-
-    private void loadView() {
-        deadLineTextView = findViewById(R.id.set_date);
-        confirmButton = findViewById(R.id.confirm_button);
-        titleEditText = findViewById(R.id.title_edit_text);
-        descriptionEditText = findViewById(R.id.description_edit_text);
-        isRemindSwitch = findViewById(R.id.is_remind);
-        toolbar = findViewById(R.id.create_task_tool_bar);
     }
 
     private void obtainViewModel() {

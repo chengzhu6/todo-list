@@ -5,6 +5,7 @@ import com.thoughtworks.todo_list.ui.create_task.TaskRepository;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -37,6 +38,11 @@ public class TaskRepositoryImpl implements TaskRepository {
                 dbTaskDataSource.updateTaskState(task);
             }
         }).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    @Override
+    public Completable updateTask(Task task) {
+        return dbTaskDataSource.updateTask(task);
     }
 
 
