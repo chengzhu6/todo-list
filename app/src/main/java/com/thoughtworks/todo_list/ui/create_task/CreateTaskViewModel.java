@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class CreateTaskViewModel extends ViewModel {
@@ -21,14 +20,14 @@ public class CreateTaskViewModel extends ViewModel {
 
     private MutableLiveData<Task> task;
     private TaskRepository taskRepository;
-    private MutableLiveData<TaskSaveResult> taskSaveResult;
+    private MutableLiveData<TaskEditResult> taskSaveResult;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    private MutableLiveData<TaskSaveResult> getTaskSaveResult() {
+    private MutableLiveData<TaskEditResult> getTaskSaveResult() {
         if (taskSaveResult == null) {
             taskSaveResult = new MutableLiveData<>();
         }
@@ -39,7 +38,7 @@ public class CreateTaskViewModel extends ViewModel {
         getTask().observe(lifecycleOwner, observer);
     }
 
-    public void observerTaskCreateResult(LifecycleOwner lifecycleOwner, Observer<TaskSaveResult> observer) {
+    public void observerTaskCreateResult(LifecycleOwner lifecycleOwner, Observer<TaskEditResult> observer) {
         getTaskSaveResult().observe(lifecycleOwner, observer);
     }
 
@@ -93,11 +92,11 @@ public class CreateTaskViewModel extends ViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnError(throwable -> {
                     Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
-                    taskSaveResult.postValue(TaskSaveResult.SAVE_FAILED);
+                    taskSaveResult.postValue(TaskEditResult.SAVE_FAILED);
                 })
                 .subscribe(aLong -> {
                     // todo create notification
-                    taskSaveResult.postValue(TaskSaveResult.SAVE_SUCCESS);
+                    taskSaveResult.postValue(TaskEditResult.SAVE_SUCCESS);
                 });
         compositeDisposable.add(disposable);
     }
@@ -109,9 +108,22 @@ public class CreateTaskViewModel extends ViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnError(throwable -> {
                     Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
-                    taskSaveResult.postValue(TaskSaveResult.SAVE_FAILED);
+                    taskSaveResult.postValue(TaskEditResult.SAVE_FAILED);
                 })
-                .doOnComplete(() -> taskSaveResult.postValue(TaskSaveResult.SAVE_SUCCESS))
+                .doOnComplete(() -> taskSaveResult.postValue(TaskEditResult.SAVE_SUCCESS))
+                .subscribe();
+        compositeDisposable.add(disposable);
+    }
+
+    public void deleteTask() {
+        Disposable disposable = taskRepository.deleteTask(task.getValue())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnError(throwable -> {
+                    Log.e(TAG, String.format("ErrorMessage: %s", throwable.getMessage()));
+                    taskSaveResult.postValue(TaskEditResult.DELETE_FAILED);
+                })
+                .doOnComplete(() -> taskSaveResult.postValue(TaskEditResult.DELETE_SUCCESS))
                 .subscribe();
         compositeDisposable.add(disposable);
     }

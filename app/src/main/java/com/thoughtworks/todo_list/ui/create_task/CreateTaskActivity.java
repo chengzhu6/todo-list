@@ -30,6 +30,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private EditText descriptionEditText;
     private Switch isRemindSwitch;
     private Toolbar toolbar;
+    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.description_edit_text);
         isRemindSwitch = findViewById(R.id.is_remind);
         toolbar = findViewById(R.id.create_task_tool_bar);
+        deleteButton = findViewById(R.id.delete_button);
     }
 
     private void init() {
@@ -61,9 +63,10 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
-        createTaskViewModel.observerTaskCreateResult(this, taskSaveResult -> {
-            Toast.makeText(this, taskSaveResult.name(), Toast.LENGTH_SHORT).show();
-            if (taskSaveResult.equals(TaskSaveResult.SAVE_SUCCESS)) {
+        createTaskViewModel.observerTaskCreateResult(this, taskEditResult -> {
+            Toast.makeText(this, taskEditResult.name(), Toast.LENGTH_SHORT).show();
+            if (taskEditResult.equals(TaskEditResult.SAVE_SUCCESS) ||
+                    taskEditResult.equals(TaskEditResult.DELETE_SUCCESS)) {
                 backToHome();
             }
         });
@@ -97,6 +100,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                 createTaskViewModel.updateTask();
             }
         });
+        deleteButton.setVisibility(View.VISIBLE);
     }
 
     private void backToHome() {
@@ -124,6 +128,8 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         confirmButton.setOnClickListener(view ->
                 createTaskViewModel.saveTask());
+
+        deleteButton.setOnClickListener(view -> createTaskViewModel.deleteTask());
     }
 
     private void showCalendarView() {

@@ -16,4 +16,6 @@ public interface TaskRepository {
     void updateTaskState(Task task);
 
     Completable updateTask(Task task);
+
+    Completable deleteTask(Task task);
 }

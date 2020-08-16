@@ -45,5 +45,10 @@ public class TaskRepositoryImpl implements TaskRepository {
         return dbTaskDataSource.updateTask(task);
     }
 
+    @Override
+    public Completable deleteTask(Task task) {
+        return dbTaskDataSource.deleteTask(task);
+    }
+
 
 }
