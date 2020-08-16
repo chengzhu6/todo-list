@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.thoughtworks.todo_list.repository.task.entity.Task;
 import com.thoughtworks.todo_list.ui.create_task.TaskRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -46,6 +47,26 @@ public class HomeViewModel extends ViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe(tasks1 -> tasks.postValue(tasks1));
         compositeDisposable.add(disposable);
+    }
+
+    public void updateTaskState(Task task, boolean isDone) {
+        List<Task> currentTasks = tasks.getValue();
+        if (currentTasks != null && currentTasks.contains(task)) {
+            currentTasks.remove(task);
+            task.setDone(isDone);
+            currentTasks.add(task);
+            taskRepository.updateTaskState(task);
+            currentTasks.sort((task1, t1) -> {
+                if (task1.isDone() == t1.isDone()) {
+                    return task1.getDeadLine().compareTo(t1.getDeadLine());
+                } else if (task1.isDone())
+                {
+                    return 1;
+                }
+                return -1;
+            });
+            this.tasks.postValue(currentTasks);
+        }
     }
 }
 

@@ -11,4 +11,6 @@ public interface TaskRepository {
     Single<Long> saveTask(Task task);
 
     Maybe<List<Task>> getAllTask();
+
+    void updateTaskState(Task task);
 }

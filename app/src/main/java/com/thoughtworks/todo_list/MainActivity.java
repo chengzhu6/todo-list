@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MainApplication application = (MainApplication)getApplication();
         User user = application.getCurrentUser();
-        if (user == null) {
+        if (user != null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {

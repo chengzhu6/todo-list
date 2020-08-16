@@ -71,7 +71,14 @@ public class HomeActivity extends AppCompatActivity {
         currentMonth.setText(LocalDateTime.now().getMonth().toString());
         homeViewModel.observerTasks(this, tasks -> {
             totalNumberOfTasks.setText(String.format(format, tasks.size()));
-            taskList.setAdapter(new TaskListAdapter(tasks));
+            TaskListAdapter adapter = new TaskListAdapter(tasks);
+            adapter.setFinishedTaskCheckBoxListener(new TaskListViewHolder.FinishedTaskCheckBoxListener() {
+                @Override
+                public void onChange(Task task, boolean isDone) {
+                    homeViewModel.updateTaskState(task, isDone);
+                }
+            });
+            taskList.setAdapter(adapter);
             taskList.setLayoutManager(new LinearLayoutManager(this));
             taskList.setHasFixedSize(true);
         });

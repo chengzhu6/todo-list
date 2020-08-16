@@ -21,6 +21,16 @@ public class Task {
 
     private boolean isRemind;
 
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
+    private boolean isDone;
+
     public Task() {
     }
 
@@ -35,8 +45,6 @@ public class Task {
     public String getDescription() {
         return description;
     }
-
-
 
     public boolean isRemind() {
         return isRemind;

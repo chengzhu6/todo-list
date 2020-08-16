@@ -10,12 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.thoughtworks.todo_list.R;
 import com.thoughtworks.todo_list.repository.task.entity.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder>{
 
     private List<Task> tasks;
+
+    public void setFinishedTaskCheckBoxListener(TaskListViewHolder.FinishedTaskCheckBoxListener finishedTaskCheckBoxListener) {
+        this.finishedTaskCheckBoxListener = finishedTaskCheckBoxListener;
+    }
+
+    private TaskListViewHolder.FinishedTaskCheckBoxListener finishedTaskCheckBoxListener;
 
     public TaskListAdapter(List<Task> tasks) {
         this.tasks = tasks;
@@ -33,6 +38,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder>{
         Task task = tasks.get(position);
         if (task != null) {
             holder.setData(task);
+            holder.setCheckBoxChangeListener(finishedTaskCheckBoxListener);
         }
     }
 
